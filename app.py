@@ -4,7 +4,7 @@ from datetime import timedelta
 
 
 # Third party libraries
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, Response
 from flask_login import (
     LoginManager,
     current_user,
@@ -410,11 +410,12 @@ def get_file():
                 print('Cannot upload file!')
         return redirect(url_for('upload'))
 
-@app.route('/.well-known/pki-validation/E9CBA3BD5C9A8D997FAA1F1BD202840B.txt')
+
+@app.route('/.well-known/pki-validation/87C2B3366AA3B3E2591A9A040901C698.txt')
 def read_cert():
-    file = open('cert.txt', 'r')
-    return file
+    content = open('cert.txt', 'r')
+    return Response(content, mimetype='text/plain')
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, port = port)
+    app.run(debug=True, host = '0.0.0.0', port = port)
