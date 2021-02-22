@@ -9,7 +9,6 @@ PyPDF2
 PyMuPDF
 fitz
 tools
-frontend
 apiclient
 oauth2client
 google-api-python-client
