@@ -1,4 +1,3 @@
-from typing import final
 import pymongo
 #from login.User import User as usr
 from flask_login import UserMixin
