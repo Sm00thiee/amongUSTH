@@ -52,7 +52,7 @@ if not os.path.exists(os.getcwd() + "/temp"):
 # Flask app setup
 app = Flask(__name__)
 
-talisman = Talisman( app )
+talisman = Talisman( app, content_security_policy=None, force_https_permanent='true')
 
 app.secret_key = os.urandom(24)
 UPLOAD_FOLDER = os.getcwd() + "/temp"
@@ -422,4 +422,4 @@ def read_cert():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host = '0.0.0.0', port = port, debug = 'True')
+    app.run(debug = 'True', port = port, host = '0.0.0.0')
