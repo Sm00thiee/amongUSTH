@@ -168,7 +168,7 @@ def callback():
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
         authorization_response=request.url,
-        redirect_url=request.base_url,
+        redirect_url=before_request(request.base_url),
         code=code,
     )
     token_response = requests.post(
@@ -422,4 +422,4 @@ def read_cert():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host = '0.0.0.0', port = port)
+    app.run(host = '0.0.0.0', port = port, debug='True')
