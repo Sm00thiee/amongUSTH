@@ -182,7 +182,7 @@ def callback():
 
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
     uri, headers, body = client.add_token(userinfo_endpoint)
-    userinfo_response = requests.get(uri, headers=headers, data=body)
+    userinfo_response = requests.get(before_request(uri), headers=headers, data=body)
 
     if userinfo_response.json().get("email_verified"):
         unique_id = userinfo_response.json()["sub"]
