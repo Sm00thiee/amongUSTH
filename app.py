@@ -63,12 +63,6 @@ bcrypt = Bcrypt(app)
 def unauthorized():
     return render_template("login.html", display_navbar="none", text="You need to login!")
 
-@app.before_request
-def before_request():
-    if 'homepage' not in request.url and request.url.startswith('http://'):
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
 
 # OAuth2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -423,4 +417,4 @@ def read_cert():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run( port = port, debug = 'True')
+    app.run(host = '0.0.0.0', port = port, debug = 'True')

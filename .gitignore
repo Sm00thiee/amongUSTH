@@ -74,3 +74,4 @@ static/stylesheets/*.scss
 # Ignore temporary folder
 /temp
 /test
+googledrive_api/token.pickle
