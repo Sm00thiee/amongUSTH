@@ -410,6 +410,11 @@ def get_file():
                 print('Cannot upload file!')
         return redirect(url_for('upload'))
 
+@app.route('/.well-known/pki-validation/E9CBA3BD5C9A8D997FAA1F1BD202840B.txt')
+def read_cert():
+    file = open('cert.txt', 'r')
+    return file
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host = '0.0.0.0', port = port)
+    app.run(debug=True, port = port)
