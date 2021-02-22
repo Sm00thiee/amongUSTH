@@ -63,7 +63,12 @@ bcrypt = Bcrypt(app)
 def unauthorized():
     return render_template("login.html", display_navbar="none", text="You need to login!")
 
-
+@app.before_request
+def before_request():
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
 
 # OAuth2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -144,15 +149,12 @@ def login():
         # scopes that let you retrieve user's profile from Google
         request_uri = client.prepare_request_uri(
             authorization_endpoint,
-            redirect_uri=before_request(request.base_url) + "/callback",
+            redirect_uri=request.base_url + "/callback",
             scope=["openid", "email", "profile"],
         )
+        print (request_uri)
         return redirect(request_uri)
 
-def before_request(url):
-    if url.startswith('http://'):
-        url = request.url.replace('http://', 'https://', 1)
-    return url
 
 @app.route("/login/callback")
 def callback():
@@ -167,8 +169,8 @@ def callback():
     # Prepare and send request to get tokens! Yay tokens!
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
-        authorization_response=before_request(request.url),
-        redirect_url=before_request(request.base_url),
+        authorization_response=request.url,
+        redirect_url=request.base_url,
         code=code,
     )
     token_response = requests.post(
@@ -178,11 +180,12 @@ def callback():
         auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
     )
 
+    # Parse the tokens!
     client.parse_request_body_response(json.dumps(token_response.json()))
 
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
     uri, headers, body = client.add_token(userinfo_endpoint)
-    userinfo_response = requests.get(before_request(uri), headers=headers, data=body)
+    userinfo_response = requests.get(uri, headers=headers, data=body)
 
     if userinfo_response.json().get("email_verified"):
         unique_id = userinfo_response.json()["sub"]
@@ -418,7 +421,6 @@ def read_cert():
     content = open('cert.txt', 'r')
     return Response(content, mimetype='text/plain')
 
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host = '0.0.0.0', port = port, debug='True')
+    app.run(host = '0.0.0.0', port = port, debug = 'True')
