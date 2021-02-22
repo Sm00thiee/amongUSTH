@@ -411,7 +411,7 @@ def get_file():
         return redirect(url_for('upload'))
 
 
-@app.route('/.well-known/pki-validation/87C2B3366AA3B3E2591A9A040901C698.txt')
+@app.route('/.well-known/pki-validation/40AAF15D3C6FD454C15A2AF2AF876A17.txt')
 def read_cert():
     content = open('cert.txt', 'r')
     return Response(content, mimetype='text/plain')
