@@ -65,7 +65,7 @@ def unauthorized():
 
 @app.before_request
 def before_request():
-    if request.url.startswith('http://'):
+    if 'homepage' not in request.url and request.url.startswith('http://'):
         url = request.url.replace('http://', 'https://', 1)
         code = 301
         return redirect(url, code=code)
@@ -423,4 +423,4 @@ def read_cert():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host = '0.0.0.0', port = port, debug = 'True')
+    app.run( port = port, debug = 'True')
