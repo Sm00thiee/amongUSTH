@@ -152,7 +152,7 @@ def login():
 def before_request(url):
     if url.startswith('http://'):
         url = request.url.replace('http://', 'https://', 1)
-        return url
+    return url
 
 @app.route("/login/callback")
 def callback():
@@ -167,7 +167,7 @@ def callback():
     # Prepare and send request to get tokens! Yay tokens!
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
-        authorization_response=request.url,
+        authorization_response=before_request(request.url),
         redirect_url=before_request(request.base_url),
         code=code,
     )
