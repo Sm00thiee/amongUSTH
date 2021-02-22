@@ -51,10 +51,8 @@ if not os.path.exists(os.getcwd() + "/temp"):
 
 # Flask app setup
 app = Flask(__name__)
-csp = {
-    'default-src': 'https://among-usth.herokuapp.com/'
-}
-talisman = Talisman( app, force_https_permanent='true', force_https='true' )
+
+talisman = Talisman( app )
 
 app.secret_key = os.urandom(24)
 UPLOAD_FOLDER = os.getcwd() + "/temp"
@@ -116,7 +114,6 @@ def generate_password():
     print(hashed_password)
 from flask_login import login_user
 @app.route("/login", methods = ['GET', 'POST'])
-@talisman()
 def login():
     #Find out what URL to hit for Google login
     if request.method=="POST" :
@@ -158,7 +155,7 @@ def login():
 
 
 @app.route("/login/callback")
-@talisman()
+@talisman(force_https_permanent='true', force_https='true')
 def callback():
     # Get authorization code Google sent back to you
     code = request.args.get("code")
