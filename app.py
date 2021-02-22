@@ -68,12 +68,6 @@ def unauthorized():
 # OAuth2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
-@app.before_request
-def before_request():
-    if request.url.startswith('http://'):
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
 
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
@@ -153,9 +147,13 @@ def login():
             redirect_uri=request.base_url + "/callback",
             scope=["openid", "email", "profile"],
         )
-        print (request_uri)
+        request_uri = before_request(request_uri)
         return redirect(request_uri)
 
+def before_request(url):
+    if url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        return url
 
 @app.route("/login/callback")
 def callback():
