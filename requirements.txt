@@ -16,4 +16,3 @@ flask_bcrypt
 flask_wtf
 Pillow
 google_auth_oauthlib
-webbrowser
