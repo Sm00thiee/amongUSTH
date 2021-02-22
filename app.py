@@ -54,7 +54,7 @@ app = Flask(__name__)
 csp = {
     'default-src': 'https://among-usth.herokuapp.com/'
 }
-talisman = Talisman( app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'], force_https_permanent='true', force_https='true' )
+talisman = Talisman( app, force_https_permanent='true', force_https='true' )
 
 app.secret_key = os.urandom(24)
 UPLOAD_FOLDER = os.getcwd() + "/temp"
