@@ -68,6 +68,12 @@ def unauthorized():
 # OAuth2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
+@app.before_request
+def before_request():
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
 
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
@@ -416,9 +422,6 @@ def read_cert():
     content = open('cert.txt', 'r')
     return Response(content, mimetype='text/plain')
 
-import ssl
-context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-context.load_cert_chain("certificate.crt", "private.key")
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
