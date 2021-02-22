@@ -418,5 +418,4 @@ def read_cert():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    context = ('certificate.crt', 'private.key')
-    app.run(debug=True, host = '0.0.0.0', port = port, ssl_context = context)
+    app.run(debug=True, host = '0.0.0.0', port = port)
