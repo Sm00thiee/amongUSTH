@@ -21,6 +21,7 @@ import login.User as logUsr
 from login.mongo import User as mongoUsr
 from login.mongo import Book as mongoBook
 from login.mongo import Admin as mongoAdmin
+from login.mongo import Comment as mongoComment
 from flask_bcrypt import Bcrypt
 from forms.forms import Password,BookPost
 from login.mail import gmail
@@ -127,6 +128,7 @@ def login():
             global user
             global first_Name
             global profile_pic
+            global id_
             id_ = mongoUsr.get_id(usr_checked.username)
             user = logUsr.user_info.get(id_)
             name = mongoUsr.get_name(id_)
@@ -200,6 +202,7 @@ def callback():
             )
             global profile_pic 
             global first_Name 
+            global id_
             id_ = user.getid()
             name = user.getName()
             email = user.getEmail()
@@ -291,27 +294,27 @@ def admin():
     return render_template("admin.html", display_navbar="none", name=first_Name, users = users, materials = materials, online = online, online_list = online_list, offline_list = offline_list, len_online = len(online_list), len_offline = len(offline_list), offline_last = offline_last)
 
 
-@app.route('/content')
-@login_required
-def content():
-    # global file_id
-    # global up_count, down_count
-    # global upvote
-    # global downvote
-    up_count = 0
-    down_count = 0
-    file_id = '1ArSB7DUAsUgxppF-Oc99n5BrztO7s-Ti'
-    image_link = mongoBook.get_front(file_id)
-    download_count = mongoBook.get_download(file_id)
-    file_link = 'https://drive.google.com/file/d/' + file_id + '/view?usp=sharing'
-    page_num = mongoBook.get_page_number(file_id)
-    description = mongoBook.get_description(file_id)
-    Author = mongoBook.get_author(file_id)
-    upvote = mongoBook.get_upvote(file_id)
-    downvote = mongoBook.get_downvote(file_id)
-    title = mongoBook.get_file_name(file_id)
+# @app.route('/content')
+# @login_required
+# def content():
+#     # global file_id
+#     # global up_count, down_count
+#     # global upvote
+#     # global downvote
+#     up_count = 0
+#     down_count = 0
+#     file_id = '1ArSB7DUAsUgxppF-Oc99n5BrztO7s-Ti'
+#     image_link = mongoBook.get_front(file_id)
+#     download_count = mongoBook.get_download(file_id)
+#     file_link = 'https://drive.google.com/file/d/' + file_id + '/view?usp=sharing'
+#     page_num = mongoBook.get_page_number(file_id)
+#     description = mongoBook.get_description(file_id)
+#     Author = mongoBook.get_author(file_id)
+#     upvote = mongoBook.get_upvote(file_id)
+#     downvote = mongoBook.get_downvote(file_id)
+#     title = mongoBook.get_file_name(file_id)
 
-    return render_template("content.html", display_navbar="inline", title = title, name=first_Name, picture=profile_pic, upvote_count = upvote, downvote_count = downvote, download_count = download_count, Author = Author, file_link = file_link, image_link = image_link, page_num = page_num, description = description)
+#     return render_template("content.html", display_navbar="inline", title = title, name=first_Name, picture=profile_pic, upvote_count = upvote, downvote_count = downvote, download_count = download_count, Author = Author, file_link = file_link, image_link = image_link, page_num = page_num, description = description)
 
 @app.route("/content/<string:bID>")
 @login_required
@@ -325,8 +328,8 @@ def content_detail(bID):
     down_count = 0
     file_id = str(bID)
     book = mongoBook.get_book(file_id)
-    print(book)
-    print(type(book))
+    # print(book)
+    # print(type(book))
     image_link = book["front"]
     # image_link = 'https://drive.google.com/thumbnail?authuser=0&sz=w320&id=1ArSB7DUAsUgxppF-Oc99n5BrztO7s-Ti'
     download_count = book["download"]
@@ -338,7 +341,36 @@ def content_detail(bID):
     downvote = book["downvote"]
     title = book["book_name"]
 
-    return render_template("content.html", display_navbar="inline", title = title, name=first_Name, picture=profile_pic, upvote_count = upvote, downvote_count = downvote, download_count = download_count, Author = Author, file_link = file_link, image_link = image_link, page_num = page_num, description = description, file_id=bID)       
+    #Display comments
+    comment_content = []
+    comment_user_name = []
+    comment_user_profilepic = []
+    comment_time = []
+    data = mongoComment.get_all_comment(file_id)
+    print(data)
+    for cursor in data:
+        comment_content.append(cursor['content'])
+        comment_user_profilepic.append(mongoUsr.get_profile_pic(cursor['user_id']))
+        comment_user_name.append(mongoUsr.get_name(cursor['user_id']))
+        comment_time.append(cursor['time'])
+        
+    comment_content.reverse()
+    comment_user_name.reverse()
+    comment_time.reverse()
+    comment_user_profilepic.reverse()
+
+    return render_template("content.html", comment_numb = len(comment_content), content = comment_content, time = comment_time, cusername = comment_user_name, cprofile_pic = comment_user_profilepic, display_navbar="inline", title = title, name=first_Name, picture=profile_pic, upvote_count = upvote, downvote_count = downvote, download_count = download_count, Author = Author, file_link = file_link, image_link = image_link, page_num = page_num, description = description, file_id=bID)       
+
+@app.route("/content/comment/<string:bID>", methods = ['POST'])
+@login_required
+def comment(bID):
+    if request.method == 'POST':
+        user_id = id_
+        content = request.form['content']
+        mongoComment.post_comment(user_id, file_id, content)
+        print('Comment: ' + content)
+
+    return redirect(url_for('content_detail', bID=bID))
 
 
 @app.route("/up", methods=["POST"])

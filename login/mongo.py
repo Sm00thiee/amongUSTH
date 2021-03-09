@@ -216,34 +216,43 @@ class Vote():
         return mdict['down']                        
 
 class Comment():
-    def post_comment(id_, user_id,book_id,content,comment_time):
+    def post_comment(user_id,book_id,content):
         if comment.find_one({'content': user_id}):
             print('Existed')
             pass
         else :
+            seq = Comment.total_comment()
             comment_time = datetime.now()
-            comment_time_date = comment_time.day() + '/' + comment_time.month()
-            mdict = {'_id':id_,'book_id':book_id,'user_id':user_id,'content':content,'date' :comment_time_date}
+            mdict = {'_id': seq + 1,'book_id':book_id,'user_id':user_id,'content':content,'time' :str(comment_time)}
             try:
                 comment.insert_one(mdict)
             except:
                 print("Comment: Insert failed")
 
-    def get_content(id_):
-        mdict = book.find_one({'_id' : id_}, {'content' : 1, '_id' : 0})
+    def get_content(_id):
+        mdict = comment.find_one({'_id' : _id})
         return mdict['content']
         
-    def get_file(id_):
-        mdict = u_login.find_one({'_id' : id_}, {'file' : 1, '_id' : 0})
-        return mdict['file']
+    def get_comment_author(_id):
+        mdict = comment.find_one({'_id' : _id})
+        return mdict['user_id']
 
-    def get_comment_time(id_):
-        mdict = u_login.find_one({'_id' : id_}, {'comment_time' : 1, '_id' : 0})
-        return mdict['comment_time']
+    def get_comment_time(_id):
+        mdict = comment.find_one({'_id' : _id})
+        return mdict['time']
     
-    def delete_comment(id_):
-        mdict = book.find_one({'_id' : id_})
+    def delete_comment(_id):
+        mdict = comment.find_one({'_id' : _id})
         comment.delete_one(mdict)
+
+    def get_all_comment(_id):
+        return comment.find({'book_id' : _id})
+
+    def total_comment():
+        seq = 0
+        for cursor in comment.find():
+            seq += 1
+        return seq
 
 class Admin():
     def is_admin(id_):

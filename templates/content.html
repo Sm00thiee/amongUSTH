@@ -75,7 +75,31 @@
     </div>
        <section class="bottom_container">
          <div class="comment_section">
+           <!-- User comment -->
           <div class="comment">
+            <form action="comment/{{file_id}}" method="POST">
+              <input placeholder="Say something.." id="cmt-input" name = 'content' type="text">
+              <button id="cmt-submit" type="submit">COMMENT!</button>
+            </form>
+          </div>
+          {% for i in range(0, comment_numb) %}  
+            <div class="comment">
+              <div class="comment-upper">
+                <!-- <div class="vote">
+                  <span><img src="{{url_for('static', filename='images/up.png')}}" alt="upvote"></span>
+                  <span>100</span>
+                  <span><img src="{{url_for('static', filename='images/down.png')}}" alt="downvote"></span>
+                  <span>40</span>  
+                </div> -->
+                <div class="profile">
+                  <img class="avatar" src={{cprofile_pic[i]}} alt="">
+                  <div class="username">{{cusername[i]}}</div>
+                </div>
+                <div class="scroll comment_content">{{content[i]}}</div>
+              </div>
+            </div>
+          {%endfor%}
+           <!-- <div class="comment">
             <div class="comment-upper">
               <div class="vote">
                 <span><img src="{{url_for('static', filename='images/up.png')}}" alt="upvote"></span>
@@ -84,8 +108,23 @@
                 <span>40</span>  
               </div>
               <div class="profile">
-                <img class="avatar" src={{profile_pic}} alt="">
-                <div class="username">{{username}}</div>
+                <img class="avatar" src="https://avatar-ex-swe.nixcdn.com/singer/avatar/2021/01/06/8/9/d/3/1609921911553_600.jpg" alt="">
+                <div class="username">LTH</div>
+              </div>
+              <div class="scroll comment_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset ....</div>
+            </div>
+           </div>
+           <div class="comment">
+            <div class="comment-upper">
+              <div class="vote">
+                <span><img src="{{url_for('static', filename='images/up.png')}}" alt="upvote"></span>
+                <span>100</span>
+                <span><img src="{{url_for('static', filename='images/down.png')}}" alt="downvote"></span>
+                <span>40</span>  
+              </div>
+              <div class="profile">
+                <img class="avatar" src="https://avatar-ex-swe.nixcdn.com/singer/avatar/2021/01/06/8/9/d/3/1609921911553_600.jpg" alt="">
+                <div class="username">LTH</div>
               </div>
               <div class="scroll comment_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset ....</div>
             </div>
@@ -119,37 +158,7 @@
               </div>
               <div class="scroll comment_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset ....</div>
             </div>
-           </div>
-           <div class="comment">
-            <div class="comment-upper">
-              <div class="vote">
-                <span><img src="{{url_for('static', filename='images/up.png')}}" alt="upvote"></span>
-                <span>100</span>
-                <span><img src="{{url_for('static', filename='images/down.png')}}" alt="downvote"></span>
-                <span>40</span>  
-              </div>
-              <div class="profile">
-                <img class="avatar" src="https://avatar-ex-swe.nixcdn.com/singer/avatar/2021/01/06/8/9/d/3/1609921911553_600.jpg" alt="">
-                <div class="username">LTH</div>
-              </div>
-              <div class="scroll comment_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset ....</div>
-            </div>
-           </div>
-           <div class="comment">
-            <div class="comment-upper">
-              <div class="vote">
-                <span><img src="{{url_for('static', filename='images/up.png')}}" alt="upvote"></span>
-                <span>100</span>
-                <span><img src="{{url_for('static', filename='images/down.png')}}" alt="downvote"></span>
-                <span>40</span>  
-              </div>
-              <div class="profile">
-                <img class="avatar" src="https://avatar-ex-swe.nixcdn.com/singer/avatar/2021/01/06/8/9/d/3/1609921911553_600.jpg" alt="">
-                <div class="username">LTH</div>
-              </div>
-              <div class="scroll comment_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset ....</div>
-            </div>
-           </div>
+           </div> -->
 
          </div>
          <div class="recommend_section">
@@ -159,6 +168,6 @@
          </div>
        </section>
     <!--Footer-->
-    {% include 'footer.html' %}
+    {% include 'footer.html' %} 
 </body>
 </html>
