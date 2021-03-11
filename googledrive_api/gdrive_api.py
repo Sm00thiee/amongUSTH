@@ -6,13 +6,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+SCOPES = ['https://www.googleapis.com/auth/drive']
 
 class generate_token:
     def __init__(self) -> None:
-        """Shows basic usage of the Drive v3 API.
-        Prints the names and ids of the first 10 files the user has access to.
-        """
         creds = None
         # The file token.pickle stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
@@ -32,6 +29,5 @@ class generate_token:
             with open('googledrive_api/token.pickle', 'wb') as token:
                 pickle.dump(creds, token)
 
-        service = build('drive', 'v3', credentials=creds)
-
+        
 

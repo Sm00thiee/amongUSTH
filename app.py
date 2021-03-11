@@ -26,7 +26,7 @@ from flask_bcrypt import Bcrypt
 from forms.forms import Password,BookPost
 from login.mail import gmail
 from tool.pdf_tool import PDF
-from googledrive_api.fs import uploadFile
+from googledrive_api.fs import uploadFile, uploadFile_duplicate
 from werkzeug.utils import secure_filename
 
 # Configuration
@@ -75,7 +75,7 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
-def load_user(user_id):
+def LOAD_USER(user_id):
     print('loaded')
     # Maintain 'active' status
     mongoUsr.set_last_active(user_id)
@@ -102,17 +102,6 @@ def index():
         print("Not logged in")
         return render_template("login.html", text="Login", display_noti="none", display_navbar="none", name="SIGN UP NOW!")
 
-
-def generate_password():
-    
-    id_ = user.get_id()
-    email = mongoUsr.get_email(id_)
-    username = email.split(".")[1].split("@")[0]
-    password = username
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    mongoUsr.add_login_info(id_, username, hashed_password)
-
-    print(hashed_password)
 from flask_login import login_user
 @app.route("/login", methods = ['GET', 'POST'])
 def login():
@@ -209,10 +198,10 @@ def callback():
             profile_pic = user.getprofile_pic()
             student_id = get_studentid(email)
             first_Name = name.split(' ', 1)[0]
+            password = bcrypt.generate_password_hash(student_id).decode('utf-8')
             
             if not mongoUsr.account_existed(id_):
-                mongoUsr.register(id_, name, email, student_id, profile_pic)
-                generate_password()
+                mongoUsr.register(id_, name, email, student_id, profile_pic, password)
                 print('Generated login info!')
                 gmail.send(email, get_studentid(email), first_Name)
      
@@ -361,6 +350,33 @@ def content_detail(bID):
 
     return render_template("content.html", comment_numb = len(comment_content), content = comment_content, time = comment_time, cusername = comment_user_name, cprofile_pic = comment_user_profilepic, display_navbar="inline", title = title, name=first_Name, picture=profile_pic, upvote_count = upvote, downvote_count = downvote, download_count = download_count, Author = Author, file_link = file_link, image_link = image_link, page_num = page_num, description = description, file_id=bID)       
 
+@app.route('/upload_dup')
+def upload_dup():
+    return render_template('upload_duplicate.html', display_navbar="inline", name=first_Name, picture=profile_pic, display_upload="none", uploadNoti="Successfully uploaded to AmongUSTH")
+
+@app.route('/upload_dup/get_file', methods = ['GET', 'POST'])
+def getfile():
+    if request.method == 'GET':
+        return redirect(url_for('upload'))
+    elif request.method == 'POST':
+        file = request.files["file"]
+        file.save(os.path.join(UPLOAD_FOLDER, secure_filename(file.filename)))
+
+        new_file = 'temp/' + secure_filename(file.filename)
+        print(new_file)
+        if '.pdf' in new_file:
+            try:
+                new_file_id = uploadFile_duplicate(new_file, mongoBook.get_file_name(file_id))
+                
+                mongoBook.append_link(file_id, new_file_id)
+                print("successfully uploaded")
+                return render_template('upload.html', display_navbar="inline", name=first_Name, picture=profile_pic, display_upload="block", uploadNoti="Successfully uploaded to AmongUSTH")
+                
+            except Exception:
+                print (Exception)
+                print('Cannot upload file!')
+        return render_template('upload.html', display_navbar="inline", name=first_Name, picture=profile_pic, display_upload="block", uploadNoti="Upload failed! Please try again or contact us!")
+
 @app.route("/content/comment/<string:bID>", methods = ['POST'])
 @login_required
 def comment(bID):
@@ -412,13 +428,13 @@ def download(bID):
         file_id = bID
         link = mongoBook.get_link(file_id)
         mongoBook.count_download(file_id)
-        webbrowser.open_new_tab(link)
-    return redirect(url_for('content_detail', bID=bID))
+
+    return render_template('download.html', len = len(link), link = link)
 
 @app.route('/upload')
 @login_required
 def upload():
-    return render_template('upload.html', display_navbar="inline", name=first_Name, picture=profile_pic)
+    return render_template('upload.html', display_navbar="inline", name=first_Name, picture=profile_pic, display_upload="none", uploadNoti="Successfully uploaded to AmongUSTH")
 
 @app.route('/upload/get_file', methods = ['GET', 'POST'])
 def get_file():
@@ -441,10 +457,13 @@ def get_file():
                 print("successfully uploaded")
                 
                 mongoBook.post_book(file_id, form['Name'], form['Type'], form['Subject'], form['Author'], form['Description'], page_count, front)
-            except Exception:
-                print (Exception)
+                return render_template('upload.html', display_navbar="inline", name=first_Name, picture=profile_pic, display_upload="block", uploadNoti="Successfully uploaded to AmongUSTH")
+            except Exception as e:
+                print (e)
                 print('Cannot upload file!')
-        return redirect(url_for('upload'))
+                return render_template('upload.html', display_navbar="inline", name=first_Name, picture=profile_pic, display_upload="block", uploadNoti="Upload failed! Please try again or contact us!")
+
+        
 
 
 @app.route('/.well-known/pki-validation/81032D3D66B450A5E80146D9D51BC6CD.txt')

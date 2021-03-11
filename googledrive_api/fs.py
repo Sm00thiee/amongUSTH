@@ -35,11 +35,15 @@ def callback(request_id, response, exception):
         else:
             print ("Permission Id: %s" % response.get('id'))
 
-def searchFile(name):
+def searchFile(name, file_type):
     page_token = None
     file_id = ''
+    if file_type == 'folder':
+        mime = 'application/vnd.google-apps.folder'
+    elif file_type == 'pdf':
+        mime = 'application/pdf'
     while True:
-        response = drive_service.files().list(q="mimeType='application/vnd.google-apps.folder'",
+        response = drive_service.files().list(q="mimeType='{}'".format(mime),
                                             spaces='drive',
                                             fields='nextPageToken, files(id, name)',
                                             pageToken=page_token).execute()
@@ -62,7 +66,7 @@ def createFolder():
                                             fields='nextPageToken, files(id, name)',
                                             pageToken=page_token).execute()
         for file in response.get('files', []):
-            if file.get('name') == 'AmongUSTH':
+            if file.get('name') == 'AmongUSTH_data':
                 print ('Found file: %s (%s)' % (file.get('name'), file.get('id')))
                 file_id = file.get('id')
                 break
@@ -76,7 +80,7 @@ def createFolder():
 
     else:
         file_metadata = {
-        'name': 'AmongUSTH',
+        'name': 'AmongUSTH_data',
         'mimeType': 'application/vnd.google-apps.folder'
         }
         file = drive_service.files().create(body=file_metadata,
@@ -100,7 +104,7 @@ def createFolder():
 def uploadFile(filepath, filename, mimetype = "application/pdf"):
     folder_id = createFolder()
     print('Upload: ' + folder_id)
-    if searchFile(filename) != '':
+    if searchFile(filename, 'pdf') != '':
         print('File exsits')
         return None
     else:
@@ -112,4 +116,16 @@ def uploadFile(filepath, filename, mimetype = "application/pdf"):
                                             fields='id').execute()
         print('File ID: %s' % file.get('id'))
         return file.get('id')
+
+def uploadFile_duplicate(filepath, filename, mimetype = "application/pdf"):
+    folder_id = createFolder()
+    file_metadata = {'name': filename, "parents": [folder_id]}
+    media = MediaFileUpload(filepath,
+                            mimetype=mimetype)
+    file = drive_service.files().create(body=file_metadata,
+                                        media_body=media,
+                                        fields='id').execute()
+    print('File ID: %s' % file.get('id'))
+    return file.get('id')
+
 

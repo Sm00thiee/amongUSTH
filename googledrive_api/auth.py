@@ -27,11 +27,11 @@ class auth:
             Credentials, the obtained credential.
         """
         cwd_dir = os.getcwd()
-        credential_dir = os.path.join(cwd_dir, '.credentials')
+        credential_dir = os.path.join(cwd_dir, 'googledrive_api/.credentials')
         if not os.path.exists(credential_dir):
             os.makedirs(credential_dir)
         credential_path = os.path.join(credential_dir,
-                                       'drive-python-quickstart.json')
+                                       'amongUSTH.json')
 
         store = Storage(credential_path)
         credentials = store.get()
