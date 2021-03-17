@@ -1,1 +1,1 @@
-web: gunicorn --certfile certificate.crt --keyfile private.key app:app
+web: gunicorn app:app
