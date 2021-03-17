@@ -25,9 +25,41 @@
                       if (input.id == "up")
                       {
                         document.getElementById('upvote_count').innerHTML = response;
+                        
+                        
+                        if (document.getElementById('up').getAttribute('src') == '/static/images/up.png'){
+                           if(document.getElementById('down').getAttribute('src') == '/static/images/down.png'){
+                            document.getElementById('up').src = '/static/images/up_active.png';
+                            document.getElementById('down').src = '/static/images/down_disabled.png';
+                            
+                           }
+                           else{
+                             console.log(document.getElementById('up').getAttribute("src"));
+                             console.log(document.getElementById('down').getAttribute("src"));
+                           }
+                          
+                        }
+                        else if (document.getElementById('up').getAttribute('src') == '/static/images/up_active.png' && document.getElementById('down').getAttribute('src') == '/static/images/down_disabled.png'){
+                          document.getElementById('up').src = '/static/images/up.png';
+                          document.getElementById('down').src = '/static/images/down.png';
+              
+                        };
+
+                        
                       }
                       else if (input.id == "down"){
                         document.getElementById('downvote_count').innerHTML = response;
+                        if (document.getElementById('up').getAttribute('src') == '/static/images/up.png' && document.getElementById('down').getAttribute('src') == '/static/images/down.png'){
+                          document.getElementById('up').src = '/static/images/up_disabled.png';
+                          document.getElementById('down').src = '/static/images/down_active.png';
+                          
+                        }
+                        else if (document.getElementById('up').getAttribute('src') == '/static/images/up_disabled.png' && document.getElementById('down').getAttribute('src') == '/static/images/down_active.png'){
+                          document.getElementById('up').src = '/static/images/up.png';
+                          document.getElementById('down').src = '/static/images/down.png';
+                          
+                        };
+                        
                       }
                     }; 
                   request.send();
@@ -55,10 +87,13 @@
            <ul class="list-unstyled">
              <li>Pages: {{page_num}}</li>
              <li>Downloads: {{download_count}}</li>
-             <li><span><input type = "image" id = "up" src="{{url_for('static', filename='images/up.png')}}" alt="upvote"></span>
-             <span id = "upvote_count">{{upvote_count}}</span></li>
-             <li><span><input type = "image" id = "down" src="{{url_for('static', filename='images/down.png')}}" alt="downvote"></span>
-             <span id = "downvote_count">{{downvote_count}}</span></li>
+             <li id = "upvote_container"><span><input type = "image" id = "up" src="{{up_icon}}" alt="upvote"></span>
+              <span id = "upvote_count">{{upvote_count}}</span>
+                
+            </li>
+             <li id = "downvote_container"><span><input button" type = "image" id = "down" src="{{down_icon}}" alt="downvote"></span>
+             <span id = "downvote_count">{{downvote_count}}</span>
+            </li>
 
            </ul>
          </div>

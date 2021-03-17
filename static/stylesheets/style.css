@@ -1226,6 +1226,11 @@ nav a:active {
   box-sizing: border-box;
   border: 1px solid black;
 }
-
-
-
+.up:disabled{
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.down:disabled{
+  pointer-events: none;
+  cursor: not-allowed;
+}

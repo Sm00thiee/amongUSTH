@@ -22,4 +22,3 @@ var $form = $('.drag-box');
   if (isAdvancedUpload) {
     $form.addClass('has-advanced-upload');
   }
-    
