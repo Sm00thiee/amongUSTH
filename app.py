@@ -110,6 +110,7 @@ def index():
 
 
 @app.route("/login", methods=['GET', 'POST'])
+@talisman(force_https_permanent='true', force_https='true')
 def login():
     # Find out what URL to hit for Google login
     if request.method == "POST":
