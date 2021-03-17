@@ -1,1 +1,1 @@
-web: python app.py
+gunicorn --certfile certificate.crt --keyfile private.key -b 0.0.0.0:8000 app:app
