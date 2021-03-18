@@ -76,60 +76,14 @@
     <div class="title">DOCUMENTS</div>
     <!-- Flickity HTML init -->
     <div class="carousel"  data-flickity='{ "initialIndex ": 0 }'>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
-        <div class="carousel-cell">
-            <a href="/content">
-                <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-                <div class="carousel-caption">Document name here</div>    
-            </a>
-        </div>
+        {% for doc in docs %}
+      <div class="carousel-cell">
+          <a href="{{ url_for('content_detail', bID=doc['_id']) }} " target="_parent">
+          <img class="carousel-inner" src='{{doc["front"]}}' alt="book_image">
+          <div class="carousel-caption">{{ doc["book_name"] }}</div>
+          </a>
+      </div>
+      {% endfor %}
     </div>
   
     </div>
@@ -138,51 +92,14 @@
     <div class="title">SLIDES</div>
     <!-- Flickity HTML init -->
     <div class="carousel" data-flickity='{ "groupCells": true }'>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-        <div class="carousel-cell">
-            <img class="carousel-inner" src="https://images-na.ssl-images-amazon.com/images/I/61ZKNw0xixL.jpg" alt="">
-            <div class="carousel-caption">Slide name here</div>
-        </div>
-    </div>
+        {% for slide in slides %}
+      <div class="carousel-cell">
+          <a href="{{ url_for('content_detail', bID=slide['_id']) }} " target="_parent">
+          <img class="carousel-inner" src='{{slide["front"]}}' alt="book_image">
+          <div class="carousel-caption">{{ slide["book_name"] }}</div>
+          </a>
+      </div>
+      {% endfor %}
     </div>
     <!--Footer-->
     {% include 'footer.html' %}
